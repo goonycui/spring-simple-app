@@ -1,0 +1,14 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: debug-mount-pipeline
+spec:
+  workspaces:
+  - name: dockerconfig
+  tasks:
+  - name: debug
+    taskRef:
+      name: debug-mount
+    workspaces:
+    - name: dockerconfig
+      workspace: dockerconfig

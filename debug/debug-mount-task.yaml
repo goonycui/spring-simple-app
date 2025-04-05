@@ -1,0 +1,17 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: debug-mount
+spec:
+  workspaces:
+  - name: dockerconfig
+    mountPath: /kaniko/.docker  # Explicitly set to match Kaniko
+  steps:
+  - name: check-config
+    image: alpine
+    script: |
+      #!/bin/sh
+      echo "Listing /kaniko/.docker:"
+      ls -al /kaniko/.docker/ || echo "Directory not found"
+      echo "Contents of config.json:"
+      cat /kaniko/.docker/config.json || echo "File not found"

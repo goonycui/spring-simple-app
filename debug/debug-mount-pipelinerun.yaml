@@ -1,0 +1,18 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: debug-mount-run-
+spec:
+  pipelineRef:
+    name: debug-mount-pipeline
+  workspaces:
+  - name: dockerconfig
+    secret:
+      secretName: docker-credentials
+#      items:
+#        - key: config.json
+#          path: config.json  # Explicitly name it config.json
+#      secretName: dummy-docker-credentials
+#      items:  # Explicitly map the key to a file
+#        - key: config.json
+#          path: config.json

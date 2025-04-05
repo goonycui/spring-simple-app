@@ -1,0 +1,7 @@
+{
+  "auths": {
+    "https://index.docker.io/v2/": {
+      "auth": "<base64-of-username:dockerhubToken>"
+    }
+  }
+}

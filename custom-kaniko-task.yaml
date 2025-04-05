@@ -14,7 +14,7 @@ spec:
       type: string
   steps:
     - name: kaniko
-      image: gcr.io/kaniko-project/executor:v1.8.0
+      image: gcr.io/kaniko-project/executor:v1.23.2
       workingDir: $(workspaces.source.path)
       volumeMounts:
         - name: docker-credentials
@@ -22,7 +22,7 @@ spec:
           readOnly: true
       env:
         - name: DOCKER_CONFIG
-          value: /kaniko/.docker
+          value: /kaniko/.docker/config.json
       args:
         - --dockerfile=$(params.DOCKERFILE)
         - --context=$(params.CONTEXT)

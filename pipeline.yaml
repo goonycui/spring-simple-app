@@ -8,8 +8,11 @@ spec:
       type: string
     - name: image-reference
       type: string
+    - name: extra-args
+      type: array
   workspaces:
     - name: source
+    - name: dockerconfig
   tasks:
     - name: fetch-source
       taskRef:
@@ -32,17 +35,39 @@ spec:
         - name: GOALS
           value: "package"
     - name: build-push
+#      taskRef:
+#        name: custom-kaniko # this is from Tekton catalog to build and push Docker images
+##      runAfter:
+##        - build-app
+#      workspaces:
+#        - name: source
+#          workspace: source
+#        - name: dockerconfig
+#          workspace: dockerconfig
+#      params:
+#        - name: IMAGE
+#          value: $(params.image-reference)
+#        - name: DOCKERFILE
+#          value: ./Dockerfile
+#        - name: CONTEXT
+#          value: ./target
+
       taskRef:
-        name: custom-kaniko # this is from Tekton catalog to build and push Docker images
+        name: kaniko
       runAfter:
         - build-app
       workspaces:
         - name: source
           workspace: source
+        - name: dockerconfig
+          workspace: dockerconfig
       params:
         - name: IMAGE
           value: $(params.image-reference)
         - name: DOCKERFILE
           value: ./Dockerfile
         - name: CONTEXT
-          value: ./target
+          value: ./
+#        - name: EXTRA_ARGS
+#          value:
+#          - "--verbosity=trace"
