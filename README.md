@@ -19,3 +19,9 @@ once the pod is up, can use below command to delete all the pvc in the namespace
 ```bash
 kubectl exec -it pvc-cleaner -- rm -rf /pvc/*
 ```
+
+to check if any other files still in pvc
+
+```bash
+kubectl exec -it pvc-cleaner -- ls pvc/
+```
