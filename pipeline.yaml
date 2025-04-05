@@ -10,7 +10,6 @@ spec:
       type: string
   workspaces:
     - name: source
-    - name: docker-credentials
   tasks:
     - name: fetch-source
       taskRef:
@@ -34,14 +33,12 @@ spec:
           value: "package"
     - name: build-push
       taskRef:
-        name: kaniko # this is from Tekton catalog to build and push Docker images
+        name: custom-kaniko # this is from Tekton catalog to build and push Docker images
       runAfter:
         - build-app
       workspaces:
         - name: source
           workspace: source
-        - name: dockerconfig
-          workspace: docker-credentials
       params:
         - name: IMAGE
           value: $(params.image-reference)

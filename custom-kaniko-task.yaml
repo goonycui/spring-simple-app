@@ -1,0 +1,33 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: custom-kaniko
+spec:
+  workspaces:
+    - name: source
+  params:
+    - name: IMAGE
+      type: string
+    - name: DOCKERFILE
+      type: string
+    - name: CONTEXT
+      type: string
+  steps:
+    - name: kaniko
+      image: gcr.io/kaniko-project/executor:v1.8.0
+      workingDir: $(workspaces.source.path)
+      volumeMounts:
+        - name: docker-credentials
+          mountPath: /kaniko/.docker
+          readOnly: true
+      env:
+        - name: DOCKER_CONFIG
+          value: /kaniko/.docker
+      args:
+        - --dockerfile=$(params.DOCKERFILE)
+        - --context=$(params.CONTEXT)
+        - --destination=$(params.IMAGE)
+  volumes:
+    - name: docker-credentials
+      secret:
+        secretName: docker-credentials
