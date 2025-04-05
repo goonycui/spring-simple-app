@@ -1,0 +1,51 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: spring-boot-build-and-push
+spec:
+  params:
+    - name: repo-url
+      type: string
+    - name: image-reference
+      type: string
+  workspaces:
+    - name: source
+    - name: docker-credentials
+  tasks:
+    - name: fetch-source
+      taskRef:
+        name: git-clone # this is from Tekton catalog
+      workspaces:
+        - name: output
+          workspace: source
+      params:
+        - name: url
+          value: $(params.repo-url)
+    - name: build-app
+      taskRef:
+        name: maven
+      runAfter:
+        - fetch-source
+      workspaces:
+        - name: source
+          workspace: source
+      params:
+        - name: GOALS
+          value: "package"
+    - name: build-push
+      taskRef:
+        name: kaniko # this is from Tekton catalog to build and push Docker images
+      runAfter:
+        - build-app
+      workspaces:
+        - name: source
+          workspace: source
+        - name: dockerconfig
+          workspace: docker-credentials
+      params:
+        - name: IMAGE
+          value: $(params.image-reference)
+        - name: DOCKERFILE
+          value: ./Dockerfile
+        - name: CONTEXT
+          value: ./target

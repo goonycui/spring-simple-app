@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-cleaner
+spec:
+  containers:
+    - name: pvc-cleaner
+      image: alpine
+      command: ["sleep", "3600"]
+      volumeMounts:
+        - name: pvc-volume
+          mountPath: /pvc
+  volumes:
+    - name: pvc-volume
+      persistentVolumeClaim:
+        claimName: source-pvc
+
