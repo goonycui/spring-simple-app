@@ -1,5 +1,5 @@
-# Use OpenJDK 17 as the base image
-FROM openjdk:17-jdk-alpine
+
+FROM amazoncorretto:17-alpine-jdk
 
 # Set the working directory to /app
 WORKDIR /app
