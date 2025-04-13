@@ -1,0 +1,30 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: spring-boot-build-and-push-run-
+spec:
+  pipelineRef:
+    name: spring-boot-build-and-push
+  podTemplate:
+    securityContext:
+      fsGroup: 65532 # Ensures workspace volume is writable by non-root group
+    env:
+      - name: HOME
+        value: /workspace/home # Set $HOME to a writable directory
+  serviceAccountName: tekton-sa
+  workspaces:
+    - name: source
+      persistentVolumeClaim:
+        claimName: source-pvc
+    - name: dockerconfig
+      secret:
+        secretName: docker-credentials
+  params:
+    - name: repo-url
+      value: "https://github.com/goonycui/spring-simple-app"
+    - name: image-reference
+      value: "scuderiacui/spring-simple-app:2.0"
+#      value: "index.docker.io/v2/scuderiacui/spring-simple-app:1.0"
+    - name: extra-args
+      value:
+        - "--verbosity=trace"  # Array with one element

@@ -1,0 +1,19 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: maven
+spec:
+  workspaces:
+    - name: source
+  params:
+    - name: GOALS
+      type: string
+  steps:
+    - name: maven
+      image: 192.168.1.138:5050/maven:3.8.5-openjdk-17
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+      workingDir: $(workspaces.source.path)
+      command: ["mvn"]
+      args: ["$(params.GOALS)"]
