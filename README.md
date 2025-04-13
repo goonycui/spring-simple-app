@@ -1,5 +1,13 @@
 
 
+## install ingress controller if need ingress for any testing
+```bash
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace
+```
+> if above command timeout, then download to local first and then install - https://github.com/kubernetes/ingress-nginx/releases/download/helm-chart-4.12.1/ingress-nginx-4.12.1.tgz
+
 ## install tekton pipeline in k8s cluster
 ```bash
 kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
@@ -52,3 +60,27 @@ kubectl create secret generic docker-credentials \
 
 ## debug folder
 those kubernetes resources in the folder is just to debug how tekton mountPath works with default (Opaque) and kubernetes.io/dockerconfigjson
+
+# kubernetes dashboard for ui view
+- install
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+kubectl get pods -n kubernetes-dashboard # wait for all the pods to be up
+```
+
+- access
+create dashboard-admin.yaml and apply
+then get access token 
+```bash
+kubectl -n kubernetes-dashboard create token admin-user
+# it generates a long token for the admin-user
+```
+start proxy
+```bash
+kubectl proxy
+```
+then access the dashboard via http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+- select Token
+- paste the token generated above
+
+
