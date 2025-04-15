@@ -28,9 +28,10 @@ another way of starting the pipeline
 ```bash
 kubectl create -f pipelinerun.yaml
 ```
-it creates and starts the pipeline run with generated name, then use below command to check the log
+it creates and starts the pipeline run with generated name, then use below command to monitor the log
 ```bash
 tkn pipelinerun logs <pipelinerun-name> -f
+tkn pipelinerun logs --last # monitor the last pipelinerun
 ```
 
 ## pvc-cleaner.yaml
