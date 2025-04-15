@@ -5,7 +5,13 @@ metadata:
 spec:
   pipelineRef:
     name: spring-boot-build-and-push
-  serviceAccountName: tekton-sa
+  podTemplate:
+    securityContext:
+      fsGroup: 65532 # Ensures workspace volume is writable by non-root group
+    env:
+      - name: HOME
+        value: /workspace/home # Set $HOME to a writable directory
+#  serviceAccountName: tekton-sa
   workspaces:
     - name: source
       persistentVolumeClaim:
@@ -17,8 +23,7 @@ spec:
     - name: repo-url
       value: "https://github.com/goonycui/spring-simple-app"
     - name: image-reference
-      value: "scuderiacui/spring-simple-app:1.0"
-#      value: "index.docker.io/v2/scuderiacui/spring-simple-app:1.0"
+      value: "scuderiacui/spring-simple-app:3.0"
     - name: extra-args
       value:
         - "--verbosity=trace"  # Array with one element

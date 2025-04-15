@@ -14,9 +14,17 @@ spec:
     - name: source
     - name: dockerconfig
   tasks:
+    - name: cleanup
+      taskRef:
+        name: cleanup-workspace
+      workspaces:
+        - name: source
+          workspace: source
     - name: fetch-source
       taskRef:
         name: git-clone # this is from Tekton catalog
+      runAfter:
+        - cleanup
       workspaces:
         - name: output
           workspace: source
